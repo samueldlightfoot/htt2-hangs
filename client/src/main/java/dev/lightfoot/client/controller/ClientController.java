@@ -21,6 +21,7 @@ public class ClientController {
 
     public static final Random rand = new Random();
     private static final int WRITE_WINDOW_CONCURRENCY = 1;
+    public static final MediaType MEDIA_TYPE = MediaType.APPLICATION_NDJSON;
 
     @NonNull
     private final WebClient webClient;
@@ -54,6 +55,7 @@ public class ClientController {
                             int windowIdx = windowCounter.incrementAndGet();
                             log.info("Processing window {}", windowIdx);
                             return writeData(window)
+                                    //.log()
                                     .doOnComplete(() -> log.info("Processed window {}", windowIdx));
                         }, WRITE_WINDOW_CONCURRENCY));
 
@@ -62,7 +64,7 @@ public class ClientController {
     private Flux<Data> getData(int count) {
         return webClient.get()
                 .uri("/get/" + count)
-                .accept(MediaType.APPLICATION_NDJSON)
+                .accept(MEDIA_TYPE)
                 .retrieve()
                 .bodyToFlux(Data.class);
     }
@@ -70,8 +72,8 @@ public class ClientController {
     private Flux<Data> writeData(Flux<Data> datas) {
         return webClient.post()
                 .uri("/write")
-                .accept(MediaType.APPLICATION_NDJSON)
-                .contentType(MediaType.APPLICATION_NDJSON)
+                .accept(MEDIA_TYPE)
+                .contentType(MEDIA_TYPE)
                 .body(BodyInserters.fromPublisher(datas, Data.class))
                 .retrieve()
                 .bodyToFlux(Data.class);

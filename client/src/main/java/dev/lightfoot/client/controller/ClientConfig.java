@@ -2,6 +2,8 @@ package dev.lightfoot.client.controller;
 
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOption;
+import io.netty.handler.ssl.SslContextBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.function.client.WebClientCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +14,9 @@ import reactor.netty.http.HttpProtocol;
 import reactor.netty.http.client.Http2AllocationStrategy;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.resources.ConnectionProvider;
+import reactor.netty.tcp.SslProvider;
 
+import java.io.File;
 import java.time.Duration;
 
 @Slf4j
@@ -22,7 +26,7 @@ public class ClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder webClientBuilder) {
         return webClientBuilder
-                .baseUrl("http://localhost:9990")
+                .baseUrl("https://localhost:9990")
                 .build();
     }
 
@@ -31,12 +35,20 @@ public class ClientConfig {
         return builder -> builder
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create(ConnectionProvider.builder("custom")
                                 .allocationStrategy(Http2AllocationStrategy.builder()
-                                        .minConnections(1)
-                                        .maxConnections(1)
+                                        .minConnections(2)
+                                        .maxConnections(2)
                                         .build())
                                 .build())
+                        //.wiretap(true)
                         .responseTimeout(Duration.ofMillis(5000))
-                        .protocol(HttpProtocol.H2C)));
+                        .secure(spec -> spec.sslContext(
+                                SslContextBuilder.forClient()
+                                        .protocols("TLSv1.3")
+                                        .trustManager(new File("/Users/samlightfoot/ssl/server.crt"))  // Trust the self-signed server certificate
+                        ))
+                        .keepAlive(true)
+                        .option(ChannelOption.SO_KEEPALIVE, true)
+                        .protocol(HttpProtocol.H2)));
     }
 
 }
