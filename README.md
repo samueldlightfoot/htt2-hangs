@@ -18,7 +18,7 @@ Steps
 
 Note
 
-The connection hang seems to be a symptom of not consuming data fast enough.
+The connection hang seems to be a symptom of not consuming data fast enough, as increasing WRITE_WINDOW_CONCURRENCY from 1 to 50 prevents the connection from hanging with count = 5000.
 
 Logs
 
