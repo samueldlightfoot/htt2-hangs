@@ -1,0 +1,12 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: sleuth-proxy-server
+build:
+  artifacts:
+    - image: my-app
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  rawYaml:
+    - app-deployment.yml
