@@ -22,6 +22,8 @@ The connection hang seems to be a symptom of not consuming data fast enough, and
 
 Logs
 
+Client
+
 ```
 2024-11-05T12:17:11.262Z DEBUG 24329 --- [ctor-http-nio-3] r.n.http.server.HttpServerOperations     : [745b90a1, L:/[0:0:0:0:0:0:0:1]:9991 - R:/[0:0:0:0:0:0:0:1]:60785] New http connection, requesting read
 2024-11-05T12:17:11.263Z DEBUG 24329 --- [ctor-http-nio-3] r.netty.transport.TransportConfig        : [745b90a1, L:/[0:0:0:0:0:0:0:1]:9991 - R:/[0:0:0:0:0:0:0:1]:60785] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpServerCodec), (reactor.left.httpTrafficHandler = reactor.netty.http.server.HttpTrafficHandler), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
