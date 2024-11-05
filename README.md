@@ -156,3 +156,5 @@ java.lang.Exception: ChannelOperation terminal stack
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) ~[netty-common-4.1.107.Final.jar:4.1.107.Final]
 	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
 ```
+
+Client logs with wiretap enabled are commited at _logs_wiretap_.
