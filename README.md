@@ -1,4 +1,4 @@
-# htt2p-hangs
+# http2-hangs
 
 Minimum reproducible sample to display hanging HTTP/2 connections given a certain streaming input size.
 
