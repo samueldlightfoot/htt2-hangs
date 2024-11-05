@@ -18,7 +18,7 @@ Steps
 
 Note
 
-The connection hang seems to be a symptom of not consuming data fast enough, and the issue perhaps lies within a Reactor Operator.
+The connection hang seems to be a symptom of not consuming data fast enough.
 
 Logs
 
