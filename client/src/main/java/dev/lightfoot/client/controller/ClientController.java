@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -19,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequiredArgsConstructor
 public class ClientController {
 
-    public static final Random rand = new Random();
     private static final int WRITE_WINDOW_CONCURRENCY = 1;
 
     @NonNull
@@ -29,16 +27,13 @@ public class ClientController {
      * This function tests the getAndConsume method with different values between 1 and 5000. For my machine I see
      * repeatable infinite hangs with counts above 3000, such that the connection is indefinitely stuck, with no data
      * flowing, and no response timeout executing.
-     *
      * Once the infinite hang threshold is known, /getAndConsume can be called directly
-     *
      */
     @GetMapping("/probeGetAndConsume")
-    public Flux<Data> callGet() {
-        return Flux.range(0, 100)
+    public Flux<Data> probeGetAndConsume() {
+        return Flux.range(1, 100)
                 .concatMap(i -> {
-                    // count = 4451 reproduced the infinite hang
-                    int count = rand.nextInt(5000) + 1;
+                    int count = i * 500;
                     return getAndConsume(count);
                 });
     }
