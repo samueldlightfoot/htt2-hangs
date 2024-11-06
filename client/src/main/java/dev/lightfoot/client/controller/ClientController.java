@@ -20,14 +20,16 @@ public class ClientController {
 
     private static final int WRITE_WINDOW_CONCURRENCY = 1;
 
+    private static final MediaType MEDIA_TYPE = MediaType.APPLICATION_NDJSON;
+
     @NonNull
     private final WebClient webClient;
 
     /**
-     * This function tests the getAndConsume method with different values between 1 and 5000. For my machine I see
+     * This function tests the getAndConsume method with incrementally increasing values. For my machine I see
      * repeatable infinite hangs with counts above 3000, such that the connection is indefinitely stuck, with no data
-     * flowing, and no response timeout executing.
-     * Once the infinite hang threshold is known, /getAndConsume can be called directly
+     * flowing.
+     * Once the infinite hang threshold is known, /getAndConsume can be called directly for debugging.
      */
     @GetMapping("/probeGetAndConsume")
     public Flux<Data> probeGetAndConsume() {
@@ -57,7 +59,7 @@ public class ClientController {
     private Flux<Data> getData(int count) {
         return webClient.get()
                 .uri("/get/" + count)
-                .accept(MediaType.APPLICATION_NDJSON)
+                .accept(MEDIA_TYPE)
                 .retrieve()
                 .bodyToFlux(Data.class);
     }
@@ -65,8 +67,8 @@ public class ClientController {
     private Flux<Data> writeData(Flux<Data> datas) {
         return webClient.post()
                 .uri("/write")
-                .accept(MediaType.APPLICATION_NDJSON)
-                .contentType(MediaType.APPLICATION_NDJSON)
+                .accept(MEDIA_TYPE)
+                .contentType(MEDIA_TYPE)
                 .body(BodyInserters.fromPublisher(datas, Data.class))
                 .retrieve()
                 .bodyToFlux(Data.class);
